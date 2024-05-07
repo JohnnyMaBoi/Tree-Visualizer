@@ -12,7 +12,13 @@ const char WIKIPEDIA_API[] = "https://en.wikipedia.org/w/api.php?";
 // "api.php?action=query&titles=Belgrade&prop=extracts&format=json&exintro=1";
 
 const char OUTPUT_FILE[] = "api_response.json";
-static const size_t URL_MAX = 1024;
+const size_t URL_MAX = 200;
+
+// requests without api url prefix and title suffix
+const char LINKS_TO_REQUEST[] =
+    "action=query&prop=links&format=json&exintro=1&titles=";
+const char LINKS_FROM_REQUEST[] =
+    "action=query&prop=links&format=json&exintro=1&titles=";
 
 // Function to make an HTTP request to the Wikipedia API
 int makeAPIRequest(const char* api_params) {
@@ -39,10 +45,7 @@ int makeAPIRequest(const char* api_params) {
   // api_params);
 
   curl_easy_setopt(handle, CURLOPT_URL, full_url);
-
-  // Set the output file for libcurl to write the response to
   curl_easy_setopt(handle, CURLOPT_WRITEDATA, output);
-
   // Perform the API request
   CURLcode res = curl_easy_perform(handle);
 
@@ -52,12 +55,13 @@ int makeAPIRequest(const char* api_params) {
     if (fclose(output) != 0) {
       (void)fprintf(stderr, "closing output filestream failed!");
     }
-
+    // free(full_url);
     return 1;
   }
 
   // Clean up resources
   curl_easy_cleanup(handle);
+  // free(full_url);
   if (fclose(output) != 0) {
     (void)fprintf(stderr, "closing output filestream failed!");
   }
@@ -65,10 +69,24 @@ int makeAPIRequest(const char* api_params) {
   return 0;
 }
 
+int get_links_from_title(char* title) {
+  char* api_params = malloc(URL_MAX * sizeof(char));
+  strncpy(api_params, LINKS_TO_REQUEST, strlen(LINKS_TO_REQUEST));
+  strncpy(api_params + strlen(api_params), title, strlen(title));
+  int success = makeAPIRequest(api_params);
+  if (success != 0) {
+    (void)fprintf(stderr, "request failed!");
+    free(api_params);
+    return 0;
+  }
+  free(api_params);
+  return 1;
+}
+
 int main() {
   // Construct the URL for the Wikipedia API request
   const char* api_params =
-      "action=query&titles=Belgrade&prop=extracts&format=json&exintro=1";
+      "action=query&titles=Belgrade&prop=links&format=json&exintro=1";
   // open output file
 
   // Make the API request and get the response

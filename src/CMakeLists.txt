@@ -11,10 +11,15 @@
 cmake_minimum_required(VERSION 3.0)
 project(WikipediaLinkExtractor C)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GRAPHVIZ REQUIRED GraphicsMagick++)
+# find_package(GraphViz REQUIRED)
 find_package(CURL REQUIRED)
 find_package(LibXml2 REQUIRED)
 
 add_executable(link_extractor link_extractor.c)
 
+target_link_libraries(link_extractor PUBLIC cgraph gvc)
+target_include_directories(link_extractor PRIVATE ${GRAPHVIZ_INCLUDE_DIRS})
 target_include_directories(link_extractor PRIVATE ${CURL_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
-target_link_libraries(link_extractor PRIVATE ${CURL_LIBRARIES} ${LIBXML2_LIBRARIES})
+target_link_libraries(link_extractor PRIVATE ${GRAPHVIZ_LIBRARIES} ${CURL_LIBRARIES} ${LIBXML2_LIBRARIES})
