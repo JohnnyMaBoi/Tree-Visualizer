@@ -36,11 +36,36 @@ int close_twopi_dot() {
     return 0;
   }
   (void)fprintf(dotFile, "}");
+  (void)fclose(dotFile);
+
   return 1;
 }
 // add central node and children to the graph
-int add_page_and_children(Page* page) {}
+int add_page_and_children() {
+  FILE* dotFile = fopen("graph.dot", "ae");
+  if (dotFile == NULL) {
+    // Handle error
+    return 0;
+  }
+  //   const char* dummy_example =
+
+  (void)fprintf(dotFile,
+                "   C [fontsize=50 fontcolor=red]\n\
+	node [fontsize=40]\n\
+	C -- {\n\
+		C++\n\
+		Python\n\
+		C#\n\
+		Low-Level\n\
+		Programming\n\
+		Registers\n\
+	}");
+  (void)fclose(dotFile);
+
+  return 1;
+}
 int main() {
   initialize_twopi_dot();
+  add_page_and_children();
   close_twopi_dot();
 }
