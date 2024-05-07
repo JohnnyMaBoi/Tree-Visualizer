@@ -18,8 +18,10 @@ find_package(CURL REQUIRED)
 find_package(LibXml2 REQUIRED)
 
 add_executable(link_extractor link_extractor.c)
+add_executable(graph_builder graph_builder.c)
 
-target_link_libraries(link_extractor PUBLIC cgraph gvc)
-target_include_directories(link_extractor PRIVATE ${GRAPHVIZ_INCLUDE_DIRS})
+target_link_libraries(graph_builder PUBLIC cgraph gvc)
+target_link_libraries(graph_builder PRIVATE ${GRAPHVIZ_LIBRARIES} ${CURL_LIBRARIES} ${LIBXML2_LIBRARIES})
+target_include_directories(graph_builder PRIVATE ${GRAPHVIZ_INCLUDE_DIRS})
 target_include_directories(link_extractor PRIVATE ${CURL_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
 target_link_libraries(link_extractor PRIVATE ${GRAPHVIZ_LIBRARIES} ${CURL_LIBRARIES} ${LIBXML2_LIBRARIES})
