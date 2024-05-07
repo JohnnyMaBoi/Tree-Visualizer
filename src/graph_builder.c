@@ -2,6 +2,8 @@
 #include <graphviz/gvc.h>
 #include <stdio.h>
 
+#include "link_extractor.h"
+
 #define GRAPH_PATH "graph.dot"
 
 int initialize_twopi_dot() {
@@ -36,7 +38,8 @@ int close_twopi_dot() {
   (void)fprintf(dotFile, "}");
   return 1;
 }
-
+// add central node and children to the graph
+int add_page_and_children(Page* page) {}
 int main() {
   initialize_twopi_dot();
   close_twopi_dot();
