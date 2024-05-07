@@ -8,15 +8,13 @@
 # or similar. The PRIVATE/INTERFACE/PUBLIC keyword will depend on whether the
 # library is used only in function bodies (PRIVATE), only in function
 # signatures/types (INTERFACE), or both (PUBLIC).
-cmake_minimum_required(VERSION 3.10)
-project(FileGraph)
+cmake_minimum_required(VERSION 3.0)
+project(WikipediaLinkExtractor C)
 
-add_library(file_system_traversal file_system_traversal.c file_system_traversal.h)
+find_package(CURL REQUIRED)
+find_package(LibXml2 REQUIRED)
 
-# Add executable
-add_executable(main main.c)
-target_link_libraries(main PRIVATE file_system_traversal)
+add_executable(link_extractor link_extractor.c)
 
-
-# Add header file directory
-target_include_directories(file_system_traversal PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(link_extractor PRIVATE ${CURL_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
+target_link_libraries(link_extractor PRIVATE ${CURL_LIBRARIES} ${LIBXML2_LIBRARIES})
